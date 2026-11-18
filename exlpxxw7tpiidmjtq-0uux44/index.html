@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="theme-color" content="#111418">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="HBR Audiobook">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>HBR Manager's Handbook · Read-along</title>
+<style>
+:root{--bg:#111418;--fg:#e8e6e3;--muted:#9aa0a6;--card:#1b2027;--line:#2a313a;--word:#ffd54a;--wordfg:#111;--sent:rgba(255,213,74,.13);--accent:#ffb300;--box:#161b21;--fs:21px}
+:root[data-theme=light]{--bg:#fbf8f2;--fg:#1f1f1f;--muted:#6b6b6b;--card:#fff;--line:#e4ded3;--word:#ffcf33;--wordfg:#111;--sent:rgba(255,190,0,.16);--accent:#b26a00;--box:#f2ede3}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font-family:Georgia,"Iowan Old Style","Noto Serif",serif;font-size:var(--fs);line-height:1.65}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top) + 8px) 12px 8px;display:flex;gap:8px;align-items:center;font-family:system-ui,-apple-system,Roboto,sans-serif}
+header select{flex:1;min-width:0;font-size:15px;padding:9px 8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg)}
+.ib{font:600 15px system-ui,sans-serif;min-width:42px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg);padding:0 10px}
+main{max-width:720px;margin:0 auto;padding:18px 18px 280px}
+h1{font:700 1.45em/1.25 system-ui,-apple-system,Roboto,sans-serif;margin:.4em 0 1em}
+h2{font:700 1.12em/1.3 system-ui,-apple-system,Roboto,sans-serif;margin:1.6em 0 .5em}
+h3{font:600 1em/1.3 system-ui,-apple-system,Roboto,sans-serif;margin:1.1em 0 .3em;color:var(--accent)}
+p{margin:0 0 .9em}
+p.bullet{padding-left:1.1em;position:relative}
+p.bullet:before{content:"•";position:absolute;left:0;color:var(--accent)}
+p.small{font-size:.8em;color:var(--muted)}
+aside{background:var(--box);border:1px solid var(--line);border-radius:14px;padding:6px 14px 4px;margin:1.2em 0;font-family:system-ui,-apple-system,Roboto,sans-serif;font-size:.92em}
+aside h3:first-child{margin-top:.6em}
+.pg{display:block;font:12px system-ui,sans-serif;color:var(--muted);margin:-.4em 0 .6em;text-align:right;opacity:.7}
+w{border-radius:4px;transition:background .12s}
+.sn.s{background:var(--sent);border-radius:4px;box-decoration-break:clone;-webkit-box-decoration-break:clone;box-shadow:0 0 0 2px var(--sent)}
+w.on{background:var(--word);color:var(--wordfg);box-shadow:0 0 0 2px var(--word)}
+.para-on{outline:none}
+#bar{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--card);border-top:1px solid var(--line);padding:8px 14px calc(env(safe-area-inset-bottom) + 58px);font-family:system-ui,-apple-system,Roboto,sans-serif;box-shadow:0 -6px 24px rgba(0,0,0,.25)}
+#bar .row{display:flex;align-items:center;justify-content:space-between;gap:8px;max-width:720px;margin:0 auto}
+#prog{width:100%;accent-color:var(--accent);height:28px;margin:0}
+.t{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.big{width:66px;height:66px;border-radius:50%;border:0;background:var(--accent);color:#111;font-size:28px;display:flex;align-items:center;justify-content:center}
+.ctl{height:48px;min-width:52px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--fg);font:600 15px system-ui,sans-serif}
+#follow{position:fixed;right:14px;bottom:250px;z-index:7;display:none;border-radius:22px;padding:10px 16px;border:0;background:var(--accent);color:#111;font:600 14px system-ui,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.35)}
+#toast{position:fixed;left:50%;bottom:260px;transform:translateX(-50%);background:#000c;color:#fff;padding:10px 16px;border-radius:12px;font:14px system-ui,sans-serif;display:none;z-index:9;max-width:88vw;text-align:center}
+#toast a{color:#ffd54a}
+.notready{color:var(--muted);font-family:system-ui,sans-serif}
+</style>
+</head>
+<body>
+<header>
+  <select id="chap" aria-label="Chapter"></select>
+  <button class="ib" id="fsm" aria-label="Smaller text">A−</button>
+  <button class="ib" id="fsp" aria-label="Larger text">A+</button>
+  <button class="ib" id="theme" aria-label="Toggle theme">◐</button>
+  <button class="ib" id="ask" aria-label="Ask about this paragraph" style="background:var(--accent);color:#111;border:0">Ask</button>
+</header>
+<main id="text"></main>
+<button id="follow">↧ Follow audio</button>
+<div id="toast"></div>
+<div id="bar">
+  <div class="row"><input id="prog" type="range" min="0" max="1000" value="0" aria-label="Progress"></div>
+  <div class="row"><span class="t" id="cur">0:00</span><span class="t" id="chname"></span><span class="t" id="dur">0:00</span></div>
+  <div class="row" style="margin-top:6px">
+    <button class="ctl" id="speed" aria-label="Speed">1×</button>
+    <button class="ctl" id="back" aria-label="Back 15 seconds">↺15</button>
+    <button class="big" id="play" aria-label="Play">▶</button>
+    <button class="ctl" id="fwd" aria-label="Forward 15 seconds">15↻</button>
+  </div>
+</div>
+<audio id="au" preload="auto"></audio>
+<script>
+(function(){
+const BOOK = window.BOOK_DATA || null;          // single-file build embeds data here
+const $ = id => document.getElementById(id);
+const au = $('au'), text = $('text');
+const LS = (k,v) => { try{ if(v===undefined) return localStorage.getItem('hbrab:'+k); localStorage.setItem('hbrab:'+k, v);}catch(e){} };
+const SPEEDS=[0.75,1,1.25,1.5,1.75,2];
+let sents={}, userJumped=false, index=null, chap=null, flat=[], cur=-1, curSent=-1, follow=true, lastUser=0, saveT=0;
+
+// ---------- theme / font ----------
+function applyTheme(t){ document.documentElement.dataset.theme=t; document.querySelector('meta[name=theme-color]').content = t==='light'?'#fbf8f2':'#111418'; }
+applyTheme(LS('theme') || (matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'));
+$('theme').onclick=()=>{const t=document.documentElement.dataset.theme==='light'?'dark':'light';applyTheme(t);LS('theme',t);};
+let fs=+(LS('fs')||21); const setFs=v=>{fs=Math.max(15,Math.min(32,v));document.documentElement.style.setProperty('--fs',fs+'px');LS('fs',fs);};
+setFs(fs); $('fsm').onclick=()=>setFs(fs-2); $('fsp').onclick=()=>setFs(fs+2);
+
+// ---------- data ----------
+async function getJSON(p){ const r=await fetch(p); if(!r.ok) throw new Error(p); return r.json(); }
+async function loadIndex(){ return BOOK ? BOOK.index : getJSON('data/index.json'); }
+async function loadChapter(id){ return BOOK ? BOOK.chapters[id] : getJSON('data/'+id+'.json'); }
+function chapLabel(c){ return c.num ? c.num+'. '+c.title : c.title; }
+const fmt=s=>{s=Math.max(0,Math.floor(s||0));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=String(s%60).padStart(2,'0');return h?h+':'+String(m).padStart(2,'0')+':'+x:m+':'+x;};
+
+function render(d){
+  text.innerHTML=''; flat=[]; sents={}; let box=null, sid=0;
+  const frag=document.createDocumentFragment();
+  d.paragraphs.forEach((p,pi)=>{
+    let el;
+    if(p.kind==='title'){ el=document.createElement('h1'); }
+    else if(p.kind==='heading'){ el=document.createElement('h2'); }
+    else if(p.kind==='boxhead'){ el=document.createElement('h3'); }
+    else { el=document.createElement('p'); if(p.kind==='bullet') el.className='bullet'; if(p.small) el.classList.add('small'); }
+    el.dataset.pi=pi; let sn=null;
+    p.words.forEach((w,wi)=>{
+      if(!sn){ sn=document.createElement('span'); sn.className='sn'; sn.dataset.sid=sid; el.appendChild(sn); sents[sid]=sn; }
+      const s=document.createElement('w'); s.textContent=w[0]; s.dataset.i=flat.length;
+      flat.push({t:w[1],e:w[2],el:s,pi,sid});
+      sn.appendChild(s);
+      const end=/[.?!]["”’)\]]*$/.test(w[0]) && !/^(Mr|Mrs|Ms|Dr|vs|e\.g|i\.e|etc)\.$/i.test(w[0]);
+      if(end){ sid++; sn=null; if(wi<p.words.length-1) el.appendChild(document.createTextNode(' ')); }
+      else if(wi<p.words.length-1) sn.appendChild(document.createTextNode(' '));
+    });
+    sid++;
+    const inBox = p.box || p.kind==='boxhead';
+    const prevP=d.paragraphs[pi-1];
+    const newBox = p.kind==='boxhead' && p.level===1 && !(prevP && prevP.kind==='boxhead' && prevP.level===1);
+    if(inBox){ if(!box||newBox){ box=document.createElement('aside'); frag.appendChild(box);} box.appendChild(el); }
+    else { box=null; frag.appendChild(el); }
+  });
+  text.appendChild(frag);
+  cur=-1; curSent=-1;
+}
+
+function wordAt(t){ let lo=0,hi=flat.length-1,ans=-1; while(lo<=hi){const m=(lo+hi)>>1; if(flat[m].t<=t){ans=m;lo=m+1;}else hi=m-1;} return ans; }
+
+function setActive(i){
+  if(i===cur) return;
+  if(cur>=0&&flat[cur]) flat[cur].el.classList.remove('on');
+  cur=i; if(i<0) return;
+  const f=flat[i]; f.el.classList.add('on');
+  if(f.sid!==curSent){
+    if(sents[curSent]) sents[curSent].classList.remove('s');
+    curSent=f.sid; if(sents[curSent]) sents[curSent].classList.add('s');
+  }
+  if(follow) center(f.el);
+}
+function center(el, force){
+  const r=el.getBoundingClientRect(), vh=innerHeight, barH=$('bar').offsetHeight, top=56;
+  const mid=top+(vh-barH-top)*0.42;
+  if(force || r.top<top+20 || r.bottom>vh-barH-20 || Math.abs(r.top-mid)>(vh-barH)*0.18){
+    window.scrollBy({top:r.top-mid, behavior: force?'auto':'smooth'});
+  }
+}
+function tick(){ if(flat.length){ setActive(wordAt(au.currentTime+0.05)); } updProg(); if(!au.paused) requestAnimationFrame(tick); }
+function updProg(){ const d=au.duration||chap&&chap.duration||0; $('cur').textContent=fmt(au.currentTime); $('dur').textContent='-'+fmt(d-au.currentTime); if(!dragging&&d) $('prog').value=Math.round(au.currentTime/d*1000);
+  const now=Date.now(); if(chap && now-saveT>2000){ saveT=now; LS('pos:'+chap.id, au.currentTime.toFixed(1)); }
+  if('mediaSession' in navigator && navigator.mediaSession.setPositionState && au.duration){ try{navigator.mediaSession.setPositionState({duration:au.duration,playbackRate:au.playbackRate,position:Math.min(au.currentTime,au.duration)});}catch(e){} } }
+
+// ---------- user scrolling pauses follow ----------
+const userScroll=()=>{ lastUser=Date.now(); if(!au.paused){ follow=false; $('follow').style.display='block'; } };
+addEventListener('touchmove',userScroll,{passive:true}); addEventListener('wheel',userScroll,{passive:true});
+$('follow').onclick=()=>{ follow=true; $('follow').style.display='none'; if(cur>=0) center(flat[cur].el,true); };
+
+// ---------- tap a word to jump ----------
+text.addEventListener('click',e=>{ const w=e.target.closest('w'); if(!w) return; const f=flat[+w.dataset.i]; userJumped=true; au.currentTime=Math.max(0,f.t-0.02); follow=true; $('follow').style.display='none'; setActive(+w.dataset.i); if(au.paused) au.play(); });
+
+// ---------- controls ----------
+$('play').onclick=()=>au.paused?au.play():au.pause();
+const skip=s=>{au.currentTime=Math.max(0,Math.min((au.duration||1e9)-0.5,au.currentTime+s)); follow=true; $('follow').style.display='none'; tick();};
+$('back').onclick=()=>skip(-15); $('fwd').onclick=()=>skip(15);
+let sp=+(LS('speed')||1); const setSp=v=>{sp=v;au.playbackRate=v;au.defaultPlaybackRate=v;$('speed').textContent=v+'×';LS('speed',v);};
+$('speed').onclick=()=>setSp(SPEEDS[(SPEEDS.indexOf(sp)+1)%SPEEDS.length]);
+let dragging=false; const prog=$('prog');
+prog.addEventListener('input',()=>{dragging=true; const d=au.duration||0; $('cur').textContent=fmt(prog.value/1000*d);});
+prog.addEventListener('change',()=>{dragging=false; au.currentTime=prog.value/1000*(au.duration||0); follow=true; tick();});
+au.addEventListener('play',()=>{$('play').textContent='❚❚'; $('play').setAttribute('aria-label','Pause'); au.playbackRate=sp; requestAnimationFrame(tick); if('mediaSession' in navigator) navigator.mediaSession.playbackState='playing';});
+au.addEventListener('pause',()=>{$('play').textContent='▶'; $('play').setAttribute('aria-label','Play'); if(chap) LS('pos:'+chap.id,au.currentTime.toFixed(1)); if('mediaSession' in navigator) navigator.mediaSession.playbackState='paused';});
+au.addEventListener('seeked',tick); au.addEventListener('loadedmetadata',updProg);
+au.addEventListener('ended',()=>{ LS('pos:'+chap.id,0); const r=index.chapters.filter(c=>c.ready); const k=r.findIndex(c=>c.id===chap.id); if(k>=0&&k<r.length-1) openChapter(r[k+1].id,true); });
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden && cur>=0 && follow) center(flat[cur].el,true); });
+
+// ---------- Ask ----------
+function toast(html,ms){ const t=$('toast'); t.innerHTML=html; t.style.display='block'; clearTimeout(toast.h); toast.h=setTimeout(()=>t.style.display='none',ms||3500); }
+$('ask').onclick=async()=>{
+  if(!chap) return; const f=flat[Math.max(cur,0)]; const p=chap.paragraphs[f?f.pi:0];
+  const pg=p.page?(' (book p. '+(p.page-9)+')'):'';
+  const msg='From "HBR Manager\'s Handbook", '+(chap.num?'Chapter '+chap.num+': ':'')+chap.title+pg+' at '+fmt(au.currentTime)+':\n\n"'+p.words.map(w=>w[0]).join(' ')+'"\n\nMy question: ';
+  let ok=false; try{ await navigator.clipboard.writeText(msg); ok=true; }catch(e){ const ta=document.createElement('textarea'); ta.value=msg; document.body.appendChild(ta); ta.select(); try{ok=document.execCommand('copy');}catch(_){} ta.remove(); }
+  window.__askText=msg;
+  toast((ok?'Paragraph copied. Paste it into your Grok Bot chat and add your question.':'Copy failed')+(navigator.share?'<br><a href="#" id="shr">Share instead…</a>':''),5000);
+  const s=document.getElementById('shr'); if(s) s.onclick=e=>{e.preventDefault(); navigator.share({text:msg}).catch(()=>{});};
+};
+
+// ---------- media session ----------
+function setMS(){ if(!('mediaSession' in navigator)||!chap) return;
+  navigator.mediaSession.metadata=new MediaMetadata({title:chapLabel(chap),artist:'Harvard Business Review',album:"HBR Manager's Handbook",artwork:[{src:(window.BOOK_ICON||new URL('icon-512.png',location.href).href),sizes:'512x512',type:'image/png'}]});
+  const H=(a,f)=>{try{navigator.mediaSession.setActionHandler(a,f);}catch(e){}};
+  H('play',()=>au.play()); H('pause',()=>au.pause()); H('seekbackward',d=>skip(-(d&&d.seekOffset||15))); H('seekforward',d=>skip(d&&d.seekOffset||15));
+  H('seekto',d=>{au.currentTime=d.seekTime; tick();});
+  const r=index.chapters.filter(c=>c.ready), k=r.findIndex(c=>c.id===chap.id);
+  H('previoustrack', k>0?()=>openChapter(r[k-1].id,true):null); H('nexttrack', k<r.length-1?()=>openChapter(r[k+1].id,true):null);
+}
+
+// ---------- chapters ----------
+async function openChapter(id,autoplay){
+  const wasPlaying=autoplay||!au.paused; au.pause();
+  const meta=index.chapters.find(c=>c.id===id);
+  if(!meta||!meta.ready){ text.innerHTML='<h1>'+(meta?chapLabel(meta):'')+'</h1><p class="notready">This chapter has not been generated yet. Ask your assistant to produce it.</p>'; chap=null; return; }
+  text.innerHTML='<p class="notready">Loading…</p>';
+  chap=await loadChapter(id); LS('last',id); $('chap').value=id; $('chname').textContent=(chap.num?'Ch '+chap.num:chap.title);
+  render(chap);
+  au.src = chap.audioB64 ? URL.createObjectURL(b64blob(chap.audioB64)) : chap.audio;
+  au.playbackRate=sp; setMS();
+  const pos=+(LS('pos:'+id)||0);
+  userJumped=false;
+  const go=()=>{ if(userJumped) return; if(pos>0) au.currentTime=pos; follow=true; tick(); const i=wordAt(pos); if(i>=0) center(flat[i].el,true); else scrollTo(0,0); if(wasPlaying) au.play().catch(()=>{}); };
+  if(au.readyState>=1) go(); else au.addEventListener('loadedmetadata',go,{once:true});
+}
+function b64blob(b){ const bin=atob(b); const u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); return new Blob([u],{type:'audio/mpeg'}); }
+
+(async()=>{
+  index=await loadIndex(); const sel=$('chap'); let part=null, og=null;
+  index.chapters.forEach(c=>{ if(c.part!==part){ part=c.part; og=document.createElement('optgroup'); og.label=c.part?c.part+' · '+c.part_title:'Front & back'; sel.appendChild(og);} const o=document.createElement('option'); o.value=c.id; o.textContent=chapLabel(c)+(c.ready?'  ('+fmt(c.duration)+')':'  — not yet'); o.disabled=!c.ready; (og||sel).appendChild(o); });
+  sel.onchange=()=>openChapter(sel.value,false);
+  setSp(sp);
+  const last=LS('last'); const first=index.chapters.find(c=>c.ready);
+  openChapter(last&&index.chapters.find(c=>c.id===last&&c.ready)?last:first.id,false);
+  if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(()=>{});
+})();
+})();
+</script>
+</body>
+</html>

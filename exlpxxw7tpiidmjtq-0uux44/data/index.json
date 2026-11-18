@@ -1,0 +1,195 @@
+{
+ "book": "The Harvard Business Review Manager's Handbook",
+ "chapters": [
+  {
+   "id": "intro",
+   "num": null,
+   "title": "Introduction",
+   "part": null,
+   "part_title": null,
+   "ready": true,
+   "duration": 430.44,
+   "est_minutes": 7.3
+  },
+  {
+   "id": "ch01",
+   "num": 1,
+   "title": "The Transition to Leadership",
+   "part": "Part One",
+   "part_title": "Develop a Leader Mindset",
+   "ready": true,
+   "duration": 1485.08,
+   "est_minutes": 24.3
+  },
+  {
+   "id": "ch02",
+   "num": 2,
+   "title": "Building Trust and Credibility",
+   "part": "Part One",
+   "part_title": "Develop a Leader Mindset",
+   "ready": true,
+   "duration": 1552.12,
+   "est_minutes": 26.4
+  },
+  {
+   "id": "ch03",
+   "num": 3,
+   "title": "Emotional Intelligence",
+   "part": "Part One",
+   "part_title": "Develop a Leader Mindset",
+   "ready": true,
+   "duration": 1887.22,
+   "est_minutes": 28.8
+  },
+  {
+   "id": "ch04",
+   "num": 4,
+   "title": "Positioning Yourself for Success",
+   "part": "Part One",
+   "part_title": "Develop a Leader Mindset",
+   "ready": true,
+   "duration": 796.71,
+   "est_minutes": 13.7
+  },
+  {
+   "id": "ch05",
+   "num": 5,
+   "title": "Becoming a Person of Influence",
+   "part": "Part Two",
+   "part_title": "Managing Yourself",
+   "ready": true,
+   "duration": 1949.73,
+   "est_minutes": 33.0
+  },
+  {
+   "id": "ch06",
+   "num": 6,
+   "title": "Communicating Effectively",
+   "part": "Part Two",
+   "part_title": "Managing Yourself",
+   "ready": true,
+   "duration": 1844.82,
+   "est_minutes": 29.8
+  },
+  {
+   "id": "ch07",
+   "num": 7,
+   "title": "Personal Productivity",
+   "part": "Part Two",
+   "part_title": "Managing Yourself",
+   "ready": true,
+   "duration": 1964.35,
+   "est_minutes": 33.9
+  },
+  {
+   "id": "ch08",
+   "num": 8,
+   "title": "Self-Development",
+   "part": "Part Two",
+   "part_title": "Managing Yourself",
+   "ready": true,
+   "duration": 1613.07,
+   "est_minutes": 27.3
+  },
+  {
+   "id": "ch09",
+   "num": 9,
+   "title": "Delegating with Confidence",
+   "part": "Part Three",
+   "part_title": "Managing Individuals",
+   "ready": true,
+   "duration": 1678.06,
+   "est_minutes": 28.7
+  },
+  {
+   "id": "ch10",
+   "num": 10,
+   "title": "Giving Effective Feedback",
+   "part": "Part Three",
+   "part_title": "Managing Individuals",
+   "ready": true,
+   "duration": 2017.89,
+   "est_minutes": 34.3
+  },
+  {
+   "id": "ch11",
+   "num": 11,
+   "title": "Developing Talent",
+   "part": "Part Three",
+   "part_title": "Managing Individuals",
+   "ready": true,
+   "duration": 1541.04,
+   "est_minutes": 26.2
+  },
+  {
+   "id": "ch12",
+   "num": 12,
+   "title": "Leading Teams",
+   "part": "Part Four",
+   "part_title": "Managing Teams",
+   "ready": true,
+   "duration": 2649.18,
+   "est_minutes": 41.8
+  },
+  {
+   "id": "ch13",
+   "num": 13,
+   "title": "Fostering Creativity",
+   "part": "Part Four",
+   "part_title": "Managing Teams",
+   "ready": true,
+   "duration": 1674.27,
+   "est_minutes": 27.3
+  },
+  {
+   "id": "ch14",
+   "num": 14,
+   "title": "Hiring—and Keeping—the Best",
+   "part": "Part Four",
+   "part_title": "Managing Teams",
+   "ready": true,
+   "duration": 2162.23,
+   "est_minutes": 34.0
+  },
+  {
+   "id": "ch15",
+   "num": 15,
+   "title": "Strategy: A Primer",
+   "part": "Part Five",
+   "part_title": "Managing the Business",
+   "ready": true,
+   "duration": 2238.75,
+   "est_minutes": 35.7
+  },
+  {
+   "id": "ch16",
+   "num": 16,
+   "title": "Mastering Financial Tools",
+   "part": "Part Five",
+   "part_title": "Managing the Business",
+   "ready": true,
+   "duration": 2607.61,
+   "est_minutes": 38.4
+  },
+  {
+   "id": "ch17",
+   "num": 17,
+   "title": "Developing a Business Case",
+   "part": "Part Five",
+   "part_title": "Managing the Business",
+   "ready": true,
+   "duration": 1790.76,
+   "est_minutes": 29.9
+  },
+  {
+   "id": "epilogue",
+   "num": null,
+   "title": "Epilogue",
+   "part": null,
+   "part_title": null,
+   "ready": true,
+   "duration": 159.87,
+   "est_minutes": 3.0
+  }
+ ]
+}
