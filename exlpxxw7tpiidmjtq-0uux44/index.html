@@ -62,6 +62,7 @@ w.on{background:var(--word);color:var(--wordfg);box-shadow:0 0 0 2px var(--word)
 <div id="bar">
   <div class="row"><input id="prog" type="range" min="0" max="1000" value="0" aria-label="Progress"></div>
   <div class="row"><span class="t" id="cur">0:00</span><span class="t" id="chname"></span><span class="t" id="dur">0:00</span></div>
+  <div class="row" id="resumeRow" style="display:none;margin-top:6px"><button class="ctl" id="resume" aria-label="Continue reading" style="width:100%;border-color:var(--accent);color:var(--accent)">Continue reading</button></div>
   <div class="row" style="margin-top:6px">
     <button class="ctl" id="speed" aria-label="Speed">1×</button>
     <button class="ctl" id="back" aria-label="Back 15 seconds">↺15</button>
@@ -77,7 +78,7 @@ const $ = id => document.getElementById(id);
 const au = $('au'), text = $('text');
 const LS = (k,v) => { try{ if(v===undefined) return localStorage.getItem('hbrab:'+k); localStorage.setItem('hbrab:'+k, v);}catch(e){} };
 const SPEEDS=[0.75,1,1.25,1.5,1.75,2];
-let sents={}, userJumped=false, index=null, chap=null, flat=[], cur=-1, curSent=-1, follow=true, lastUser=0, saveT=0;
+let sents={}, userJumped=false, index=null, chap=null, flat=[], cur=-1, curSent=-1, follow=true, lastUser=0, saveT=0, resumeDismissed=false;
 
 // ---------- theme / font ----------
 function applyTheme(t){ document.documentElement.dataset.theme=t; document.querySelector('meta[name=theme-color]').content = t==='light'?'#fbf8f2':'#111418'; }
@@ -152,6 +153,7 @@ function updProg(){ const d=au.duration||chap&&chap.duration||0; $('cur').textCo
 const userScroll=()=>{ lastUser=Date.now(); if(!au.paused){ follow=false; $('follow').style.display='block'; } };
 addEventListener('touchmove',userScroll,{passive:true}); addEventListener('wheel',userScroll,{passive:true});
 $('follow').onclick=()=>{ follow=true; $('follow').style.display='none'; if(cur>=0) center(flat[cur].el,true); };
+$('resume').onclick=()=>{ if(!chap) return; resumeDismissed=true; $('resumeRow').style.display='none'; follow=true; $('follow').style.display='none'; if(cur>=0) center(flat[cur].el,true); au.play().catch(()=>{}); };
 
 // ---------- tap a word to jump ----------
 text.addEventListener('click',e=>{ const w=e.target.closest('w'); if(!w) return; const f=flat[+w.dataset.i]; userJumped=true; au.currentTime=Math.max(0,f.t-0.02); follow=true; $('follow').style.display='none'; setActive(+w.dataset.i); if(au.paused) au.play(); });
@@ -205,7 +207,7 @@ async function openChapter(id,autoplay){
   au.playbackRate=sp; setMS();
   const pos=+(LS('pos:'+id)||0);
   userJumped=false;
-  const go=()=>{ if(userJumped) return; if(pos>0) au.currentTime=pos; follow=true; tick(); const i=wordAt(pos); if(i>=0) center(flat[i].el,true); else scrollTo(0,0); if(wasPlaying) au.play().catch(()=>{}); };
+  const go=()=>{ if(userJumped) return; if(pos>0) au.currentTime=pos; if(!resumeDismissed){ $('resumeRow').style.display=pos>0?'flex':'none'; $('resume').setAttribute('aria-label','Continue reading from '+chapLabel(chap)+' at '+fmt(pos)); } follow=true; tick(); const i=wordAt(pos); if(i>=0) center(flat[i].el,true); else scrollTo(0,0); if(wasPlaying) au.play().catch(()=>{}); };
   if(au.readyState>=1) go(); else au.addEventListener('loadedmetadata',go,{once:true});
 }
 function b64blob(b){ const bin=atob(b); const u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); return new Blob([u],{type:'audio/mpeg'}); }

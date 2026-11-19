@@ -1,0 +1,89 @@
+name: GitHub Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Check app shell and project-site paths
+        run: bash scripts/pages-preflight.sh
+
+      - name: Stage the complete app at its repository subpath
+        shell: bash
+        run: |
+          set -euo pipefail
+          app_dir=exlpxxw7tpiidmjtq-0uux44
+          site_dir="_site/$app_dir"
+          mkdir -p "$site_dir"
+          cp -a "$app_dir/." "$site_dir/"
+
+          for file in index.html manifest.webmanifest sw.js icon.svg icon-192.png icon-512.png data/index.json; do
+            if [[ ! -f "$site_dir/$file" ]]; then
+              echo "Required staged app file is missing: $site_dir/$file" >&2
+              exit 1
+            fi
+          done
+
+          json_count=$(find "$site_dir/data" -type f -iname '*.json' | wc -l)
+          audio_count=$(find "$site_dir/audio" -type f -iname '*.mp3' | wc -l)
+          if (( json_count == 0 || audio_count == 0 )); then
+            echo 'The staged app is missing chapter JSON or audio files.' >&2
+            exit 1
+          fi
+          diff -qr "$app_dir" "$site_dir"
+
+          # GitHub Pages requires an index.html at the artifact root. Keep app assets under the repository subpath.
+          cat > _site/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta http-equiv="refresh" content="0;url=./exlpxxw7tpiidmjtq-0uux44/">
+            <meta name="robots" content="noindex,nofollow,noarchive">
+            <title>HBR Manager's Handbook · Read-along</title>
+          </head>
+          <body>
+            <p><a href="./exlpxxw7tpiidmjtq-0uux44/">Open the read-along</a>.</p>
+          </body>
+          </html>
+          HTML
+
+          printf 'Staged complete app tree (%s JSON files, %s MP3 files) at %s/.\n' "$json_count" "$audio_count" "$site_dir"
+          printf 'Generated a root index.html redirect with a fallback link.\n'
+          du -sh _site
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
